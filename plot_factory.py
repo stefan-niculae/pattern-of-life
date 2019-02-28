@@ -14,9 +14,14 @@ labels = expected.apply(label_format, axis=1)
 
 
 armed2marker_config = {
-    True:  dict(colorscale='Reds',  reversescale=False, colorbar=dict(title='Nefarious', thickness=15, x=1.08)),
-    False: dict(colorscale='Greys', reversescale=True,  colorbar=dict(title='Civilians', thickness=15, x=1.02)),
+    True:  dict(colorscale='Reds',  reversescale=False, showscale=False),
+    False: dict(colorscale='Greys', reversescale=True,  showscale=False),
 }
+
+civilians_counts = expected.persons[~expected.armed]
+civilians_range  = min(civilians_counts), max(civilians_counts)
+hostiles_counts  = expected.persons[expected.armed]
+hostiles_range   = min(hostiles_counts), max(hostiles_counts)
 
 traces = []
 for armed_status in [True, False]:
@@ -44,9 +49,17 @@ for armed_status in [True, False]:
     ))
 
 layout = dict(
-    title='Expected Activity<br><span style="font-size: 12">(dummy generated data)</span>',
-    autosize=True,
-    height=1000,
+    # title='Expected Activity<br><span style="font-size: 12">(dummy generated data)</span>',
+    # height='100vh',
+    # width=1000,
+    autoscale=False,
+    margin=go.layout.Margin(
+        l=0,
+        r=0,
+        b=0,
+        t=0,
+        pad=0,
+    ),
 
     xaxis=dict(hoverformat='.2f'),
 
@@ -83,6 +96,6 @@ layout = dict(
         x=.02,
         xanchor='left',
         y=.02,
-        yanchor = 'bottom',
+        yanchor='bottom',
     )]
 )

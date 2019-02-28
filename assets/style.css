@@ -1,0 +1,94 @@
+* {
+  font-family: 'Source Sans Pro', 'Open Sans', sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+h1, h2 {
+  font-weight: normal;
+}
+
+h1 {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+h2 {
+  margin-top: 2em;
+  margin-bottom: 0;
+}
+
+#main-container {
+  display: flex;
+}
+
+/* Left panel */
+#left-panel {
+  min-width: 300px;
+  padding: 20px;
+  border-right: 1px solid #b6b6b6;
+}
+
+.colorscale-container {
+  margin-top: 2em;
+}
+.colorscale-label,
+.colorscale {
+  display: inline-block;
+}
+
+.colorscale-label {
+  margin-right: 20px;
+  width: 50px;
+}
+
+.colorscale {
+  width: 270px;
+  height: 1em;
+  display: inline-block;
+  border: 1px solid black;
+  background-size: 100% auto;
+  clear: both;
+}
+
+.left-range {
+  float: left
+}
+.right-range {
+  float: right
+}
+
+#civilians-colorscale {
+    background-image: url('../assets/Greys-colorscale.png');
+}
+#hostiles-colorscale {
+  background-image: url('../assets/Reds-colorscale.png');
+}
+
+
+.control-label {
+  margin-bottom: .5em;
+  margin-top: 1em;
+}
+
+.rc-slider {
+  margin-bottom: 2.3em;
+}
+
+#show-radio label {
+  display: block;
+}
+#show-radio label input {
+  margin-right: 1em;
+}
+
+/* Map */
+#map-container {
+  flex-grow: 1;
+}
+
+#map-chart {
+  height: 100vh;
+}
