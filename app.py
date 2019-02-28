@@ -5,6 +5,7 @@ from plot_factory import traces, layout
 
 
 app = dash.Dash(__name__)
+server = app.server
 # styling in external_stylesheets
 
 app.layout = html.Div(children=[
