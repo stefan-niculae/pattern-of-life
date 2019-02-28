@@ -18,4 +18,4 @@ app.layout = html.Div(children=[
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)  # remove debug (and hot reloading) for production
+    app.run_server(debug=True, port=80)  # remove debug (and hot reloading) for production
