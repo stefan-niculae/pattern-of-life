@@ -24,41 +24,61 @@ h2 {
   display: flex;
 }
 
-/* Left panel */
-#left-panel {
-  min-width: 300px;
-  padding: 20px;
-  border-right: 1px solid #b6b6b6;
+/* Legend */
+#legend{
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 2;
+
+  background-color: rgba(255, 255, 255, 0.75);
+  border: 1px solid #e7e7e7;
+  border-radius: 5px;
+  padding: .65em .65em .25em .25em;
 }
 
-.colorscale-container {
-  margin-top: 2em;
+.colorscale-container:not(:last-child) {
+  margin-bottom: .5em;
 }
-.colorscale-label,
-.colorscale {
+
+.colorscale-label {
   display: inline-block;
 }
 
 .colorscale-label {
   margin-right: 20px;
   width: 50px;
+  vertical-align: top;
 }
 
 .colorscale {
-  width: 270px;
+  width: 170px;
   height: 1em;
   display: inline-block;
-  border: 1px solid black;
+  border: 1px solid #7b7b7b;
   background-size: 100% auto;
   clear: both;
 }
 
-.left-range {
-  float: left
+.colorscale-ticks {
+  display: flex;
+  justify-content: space-between;
 }
-.right-range {
-  float: right
+.colorscale-ticks p {
+  font-size: .9em;
+  padding-top: 2px;
 }
+
+/*.left-tick {*/
+  /*float: left*/
+/*}*/
+/*.center-tick {*/
+  /*margin: 0 auto;*/
+  /*display: none;*/
+/*}*/
+/*.right-tick {*/
+  /*float: right*/
+/*}*/
 
 #civilians-colorscale {
     background-image: url('../assets/Greys-colorscale.png');
@@ -68,6 +88,17 @@ h2 {
 }
 
 
+/* Left panel */
+#left-panel {
+  min-width: 300px;
+  padding: 20px;
+  border-right: 1px solid #b6b6b6;
+}
+
+#mgrs-input {
+  width: 100%;
+}
+
 .control-label {
   margin-bottom: .5em;
   margin-top: 1em;
@@ -75,6 +106,21 @@ h2 {
 
 .rc-slider {
   margin-bottom: 2.3em;
+  width: 93%; /* so labels don't "overflow" */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rc-slider-handle {
+  margin-left: -10px;  /* account for the larger size */
+}
+
+#now-button {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5em;
+  width: 75%;
+  display: block;
 }
 
 #show-radio label {
