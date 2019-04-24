@@ -2,11 +2,6 @@
 
 
 
-* {
-  --accent-color: #616161;
-}
-
-
 .rc-slider-rail,
 .rc-slider-track {
   height: 14px;

@@ -18,14 +18,34 @@ server = app.server
 
 """ Data """
 city_coords = {
-    'Kabul':            (34.32, 69.10),
-    'Kandahar':         (31.37, 65.43),
-    'Mazar-e Sharif':   (36.42, 67.07),
-    'Herat':            (34.20, 62.12),
-    'Jalalabad':        (34.26, 70.26),
-    'Kunduz':           (36.43, 68.52),
-    'Ghazni':           (33.32, 68.25),
+    'Tokyo':    (35.6, 139.7),
+    'Yokohama': (35.26, 139.38),
+    'Osaka':    (34.41, 135.30),
 }
+
+religious_events = [
+    'Setsubun (Feb 2)',
+    'Hina Matsuri (Mar 3)',
+    'Birth of Buddha (Apr 8)',
+    'Tanabata Matsuri (Jul 7)',
+    'Shichi-go-san (Nov 15)',
+]
+
+holidays = [
+    'New Year (Jan 1)',
+    'Foundation Day (Feb 11)',
+    'Vernal Equinox (Mar 21)',
+    'Showa Day (Apr 29)',
+    'Constitution Memorial (May 3)',
+    'Greenery Day (May 4)',
+    'Children\'s Day (May 5)',
+    'Marine Day (Jul 16)',
+    'Mountain Day (Aug 11)',
+    'Autumnal Equinox (Sep 23)',
+    'Sports Day (Oct 8)',
+    'Thanksgiving (Nov 23)',
+    'Emperor\'s Birthday (Dec 23)',
+]
 
 entries = pd.read_csv('entries.csv')
 
@@ -33,14 +53,12 @@ entries = pd.read_csv('entries.csv')
 """ Layout """
 traces, layout = generate_graph(entries)  # initial graph
 
-# TODO make these dynamic as well
-civilians_counts = entries.counts[~entries.armed]
-civilians_range  = min(civilians_counts), max(civilians_counts)
-hostiles_counts  = entries.counts[entries.armed]
-hostiles_range   = min(hostiles_counts), max(hostiles_counts)
+# TODO? make these dynamic as well
+counts_range = min(entries.counts), max(entries.counts)
 
-default_day = 2
-default_hour = 15
+default_day = (0, 4)
+default_hour = (9, 17)
+default_temperature = (1, 6)
 
 
 app.layout = html.Div(id='main-container', children=[
@@ -48,35 +66,28 @@ app.layout = html.Div(id='main-container', children=[
         html.H1('Expected Activity'),
 
 
-        html.H2('Location'),
-
-        html.P('Area:', className='control-label'),
-        dcc.Dropdown(
-            id='area-dropdown',
-            options=[dict(label=city, value=city) for city in city_coords.keys()],
-            value='Kabul',
-        ),
-
-        html.P('MGRS coordinates:', className='control-label'),
-        dcc.Input(
-            id='mgrs-input',
-            placeholder='example: 42SWC0920097642',
-            type='text',
-            value='',
-        ),
-        # dcc.Input(
-        #     id='lon-input',
-        #     className='coord-input',
-        #     placeholder='Longitude',
-        #     type='number',
-        #     value='69.10'
+        # html.H2('Location'),
+        #
+        # html.P('Area:', className='control-label'),
+        # dcc.Dropdown(
+        #     id='area-dropdown',
+        #     options=[dict(label=city, value=city) for city in city_coords.keys()],
+        #     value='Tokyo',
         # ),
-
+        #
+        # html.P('MGRS coordinates:', className='control-label'),
+        # dcc.Input(
+        #     id='mgrs-input',
+        #     placeholder='example: 42SWC0920097642',
+        #     type='text',
+        #     value='',
+        # ),
 
         html.H2('Time'),
 
         html.P('Day of week:', className='control-label'),
-        dcc.Slider(
+        html.Img(src='assets/day_hist.png', className='slider-hist'),
+        dcc.RangeSlider(
             id='day-slider',
             min=0, max=6, step=1,
             value=default_day,
@@ -84,28 +95,63 @@ app.layout = html.Div(id='main-container', children=[
         ),
 
         html.P('Hour of day:', className='control-label'),
-        dcc.Slider(
+        html.Img(src='assets/hour_hist.png', className='slider-hist'),
+        dcc.RangeSlider(
             id='hour-slider',
             min=0, max=23, step=1,
             value=default_hour,
             marks={i: i for i in list(range(0, 24, 3)) + [23]},
         ),
 
-        html.Button('Set current day & hour', id='now-button'),
+        # html.Button('Set current day & hour', id='now-button'),
 
+        html.H2('Weather'),
+
+        html.P('Temperature:', className='control-label'),
+        html.Img(src='assets/temperature_bin_hist.png', className='slider-hist'),
+        dcc.RangeSlider(
+            id='temperature-slider',
+            min=0, max=10, step=1,
+            value=default_temperature,
+            marks={x: f'{t}°' for x, t in zip(range(0, 11, 2), range(50, 75+1, 5))},
+        ),
+
+        # html.P('Precipitation:', className='control-label'),
+        # dcc.Slider(
+        #     id='precipitation-slider',
+        #     min=0, max=100, step=.05,
+        #     value=default_hour,
+        #     marks={x: f'{x}%' for x in range(0, 101, 20)},
+        # ),
+        #
+        #
+        # html.H2('Events', id='events-header'),
+        #
+        # html.P('Religious:', className='control-label'),
+        # dcc.Dropdown(
+        #     id='religious-dropdown',
+        #     options=[dict(label=x, value=x) for x in religious_events],
+        #     value=None,
+        # ),
+        #
+        # html.P('Holidays:', className='control-label'),
+        # dcc.Dropdown(
+        #     id='holidays-dropdown',
+        #     options=[dict(label=x, value=x) for x in holidays],
+        #     value=None,
+        # ),
+        #
+        # html.Div(className='wide-container', children=[
+        #     # html.P('Set as of:', className='inline-label'),
+        #     dcc.DatePickerSingle(
+        #         date=None,
+        #         placeholder='Set as of date...',
+        #         display_format='MMM Do, YYYY',
+        #         clearable=True,
+        #     ),
+        # ]),
 
         html.H2('Show'),
-
-        html.P('Data points:', className='control-label'),
-        dcc.RadioItems(
-            id='show-radio',
-            options=[
-                dict(label='Hostiles only', value='hostiles'),
-                dict(label='Civilians only', value='civilians'),
-                dict(label='All', value='all'),
-            ],
-            value='all',
-        ),
 
         html.P('Map overlay:', className='control-label'),
         dcc.Dropdown(
@@ -131,22 +177,12 @@ app.layout = html.Div(id='main-container', children=[
 
     html.Div(id='legend', children=[
         html.Div(className='colorscale-container', children=[
-            html.Div('Civilians', className='colorscale-label', id='civilians-label'),
-            html.Div(className='colorscale', id='civilians-colorscale', children=[
+            html.Div('Tweets', className='colorscale-label', id='tweets-label'),
+            html.Div(className='colorscale', id='tweets-colorscale', children=[
                 html.Div(className='colorscale-ticks', children=[
-                    html.P(civilians_range[0], className='left-tick'),
-                    html.P(sum(civilians_range) // 2, className='center-tick'),
-                    html.P(civilians_range[1], className='right-tick'),
-                ])
-            ]),
-        ]),
-        html.Div(className='colorscale-container', children=[
-            html.Div('Hostiles', className='colorscale-label', id='hostiles-label'),
-            html.Div(className='colorscale', id='hostiles-colorscale', children=[
-                html.Div(className='colorscale-ticks', children=[
-                    html.P(hostiles_range[0], className='left-tick'),
-                    html.P(sum(hostiles_range) // 2, className='center-tick'),
-                    html.P(hostiles_range[1], className='right-tick'),
+                    html.P(int(counts_range[0]), className='left-tick'),
+                    html.P(sum(counts_range) // 2, className='center-tick'),
+                    html.P(int(counts_range[1]), className='right-tick'),
                 ])
             ]),
         ]),
@@ -156,14 +192,14 @@ app.layout = html.Div(id='main-container', children=[
 
 
 """ Interactivity """
-@app.callback(
-    Output('mgrs-input', 'value'),
-    [Input('area-dropdown', 'value')]
-)
-def set_coords_from_area(area_name):
-    return latlon2mgrs(city_coords[area_name])
-
-# TODO when setting MGRS coords manually, blank out area dropdown
+# @app.callback(
+#     Output('mgrs-input', 'value'),
+#     [Input('area-dropdown', 'value')]
+# )
+# def set_coords_from_area(area_name):
+#     return latlon2mgrs(city_coords[area_name])
+#
+# # TODO when setting MGRS coords manually, blank out area dropdown
 
 
 @app.callback(
@@ -171,46 +207,52 @@ def set_coords_from_area(area_name):
     [
         Input('day-slider', 'value'),
         Input('hour-slider', 'value'),
-        Input('show-radio', 'value'),
-        Input('mgrs-input', 'value'),
+        Input('temperature-slider', 'value'),
+        # Input('mgrs-input', 'value'),
         Input('overlay-dropdown', 'value'),
     ]
 )
-def set_graph(day, hour, shown_points, mgrs_coords, map_overlay):
-    center = mgrs2latlon(mgrs_coords)
-    filtered = entries[
-        (entries.day == day) &
-        (entries.hour == hour)
-    ]
-    if shown_points == 'civilians':
-        filtered = filtered[~filtered.armed]
-    if shown_points == 'hostiles':
-        filtered = filtered[filtered.armed]
+def set_graph(
+        day_range,
+        hour_range,
+        temperature_range,
+        # mgrs_coords,
+        map_overlay
+):
+    # center = mgrs2latlon(mgrs_coords)
+    filtered = pd.DataFrame(entries[
+        entries.day.between(*day_range) &
+        entries.hour.between(*hour_range) &
+        entries.temperature.between(*temperature_range)
+    ].groupby(['lat', 'lon']).counts.mean().round().astype(int)).reset_index()
 
-    traces, layout = generate_graph(filtered, center=center, map_overlay=map_overlay)
+    traces, layout = generate_graph(
+        filtered,
+        # center=center,  # TODO put back
+        map_overlay=map_overlay)
     return dict(data=traces, layout=layout)
 
 
-@app.callback(
-    Output('day-slider', 'value'),
-    [Input('now-button', 'n_clicks')]
-)
-def set_current_day(n_clicks):
-    if n_clicks:
-        return datetime.today().weekday()
-    else:
-        return default_day
+# @app.callback(
+#     Output('day-slider', 'value'),
+#     [Input('now-button', 'n_clicks')]
+# )
+# def set_current_day(n_clicks):
+#     if n_clicks:
+#         return datetime.today().weekday()
+#     else:
+#         return default_day
 
-
-@app.callback(
-    Output('hour-slider', 'value'),
-    [Input('now-button', 'n_clicks')]
-)
-def set_current_hour(n_clicks):
-    if n_clicks:
-        return datetime.now().hour
-    else:
-        return default_hour
+#
+# @app.callback(
+#     Output('hour-slider', 'value'),
+#     [Input('now-button', 'n_clicks')]
+# )
+# def set_current_hour(n_clicks):
+#     if n_clicks:
+#         return datetime.now().hour
+#     else:
+#         return default_hour
 
 
 """ Running """

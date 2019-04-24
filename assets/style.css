@@ -1,5 +1,7 @@
 * {
   font-family: 'Source Sans Pro', 'Open Sans', sans-serif;
+  --dark-grey: #7b7b7b;
+  --panel-width: 300px;
 }
 
 body {
@@ -55,7 +57,7 @@ h2 {
   width: 170px;
   height: 1em;
   display: inline-block;
-  border: 1px solid #7b7b7b;
+  border: 1px solid var(--dark-grey);
   background-size: 100% auto;
   clear: both;
 }
@@ -69,28 +71,13 @@ h2 {
   padding-top: 2px;
 }
 
-/*.left-tick {*/
-  /*float: left*/
-/*}*/
-/*.center-tick {*/
-  /*margin: 0 auto;*/
-  /*display: none;*/
-/*}*/
-/*.right-tick {*/
-  /*float: right*/
-/*}*/
-
-#civilians-colorscale {
-    background-image: url('../assets/Greys-colorscale.png');
+#tweets-colorscale {
+  background-image: url('../assets/Blues-colorscale.png');
 }
-#hostiles-colorscale {
-  background-image: url('../assets/Reds-colorscale.png');
-}
-
 
 /* Left panel */
 #left-panel {
-  min-width: 300px;
+  min-width: var(--panel-width);
   padding: 20px;
   border-right: 1px solid #b6b6b6;
 }
@@ -113,6 +100,17 @@ h2 {
 
 .rc-slider-handle {
   margin-left: -10px;  /* account for the larger size */
+  bottom: -2px;
+  border: none;
+  background-color: var(--dark-grey);
+}
+
+.rc-slider-handle:hover {
+  border: none;
+}
+
+.rc-slider-track-1 {
+  background: #50b1e6 !important;
 }
 
 #now-button {
@@ -138,3 +136,29 @@ h2 {
 #map-chart {
   height: 100vh;
 }
+
+.slider-hist {
+  width: var(--panel-width);
+  height: 100px;
+  margin-bottom: 5px;
+}
+
+/*.inline-label {*/
+  /*display: inline-block ;*/
+/*}*/
+
+/*.wide-container {*/
+  /*width: 100%;*/
+/*}*/
+
+/*#events-header {*/
+  /*margin-top: 3em;*/
+/*}*/
+
+
+/*.SingleDatePickerInput {*/
+  /*margin-top: 2em;*/
+  /*margin-left: 3em;*/
+  /*border: 1px solid #797979;*/
+  /*border-radius: 5px;*/
+/*}*/
